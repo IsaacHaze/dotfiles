@@ -1,3 +1,9 @@
 [user]
 	name = Isaac Sijaranamual
 	email = isaacsijaranamual@gmail.com
+
+[alias]
+	tree = log --graph --full-history --all --color --date=short --pretty=format:\"%Cred%x09%h %Creset%ad%C(bold blue)%d %Creset %s %C(bold)(%an)%Creset\"
+
+[color]
+	ui = true
