@@ -32,6 +32,18 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+# custom installed software
+for dir in ~/software/*
+do
+  if [ -d "$dir/bin" ]
+  then
+      PATH="$dir/bin":$PATH
+  fi
+done
+
+export PATH
+
+
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -65,6 +77,10 @@ else
 fi
 unset color_prompt force_color_prompt
 
+#not too fancy a prompt, ANSI escape start '\e[', escape end 'm',
+#bold = '1', normal = '0'
+export PS1='\[\e[1m\]\u\[\e[0m\]@\[\e[1m\]\h\[\e[0m\] '
+
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
@@ -73,6 +89,15 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+
+function parse_git_branch {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo "["${ref#refs/heads/}"] "
+}
+
+PS1="$PS1\$(parse_git_branch)"
+
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
