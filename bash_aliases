@@ -8,3 +8,6 @@ alias emasc=emacs
 
 alias auau='sudo aptitude update && sudo aptitude full-upgrade'
 alias dir='echo "sorry, wrong OS"'
+
+alias calc='libreoffice --calc'
+alias writer='libreoffice --writer'
