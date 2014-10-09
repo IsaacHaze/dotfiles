@@ -41,6 +41,11 @@ do
   fi
 done
 
+# python/pip
+PATH=~/.local/bin:$PATH
+
+PATH=~/bin:$PATH
+
 export PATH
 
 
