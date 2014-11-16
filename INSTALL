@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# shamelessly taken from:
+#  https://github.com/larsmans/dotfiles/blob/master/INSTALL
+
+set -e
+
+if [ ! -x INSTALL ]; then
+    echo "please cd to the dotfiles directory" >&2
+    false
+fi
+
+for f in [a-z]*; do
+    [ ! -f $f ] && continue
+    dest="${HOME}/.$f"
+    echo "$f -> $dest"
+    if [ -e "$dest" ]; then
+        bak="${dest}.bak"
+        [ -e "$bak" ] && echo "warning: overwriting $bak" >&2
+        mv -f "$dest" "$bak"
+    fi
+
+    # XXX assume installation in ~/dotfiles for now;
+    # I've had to move homedirs around a few times already
+    #ln -s "`pwd`/$f" "$dest"
+    ln -s "dotfiles/$f" "$dest"
+done
+
+ln -s "../dotfiles/vimsyntax" "${HOME}/.vim/syntax"
+
+# use an explicit Bash invocation to get XDG_HOME from .bashrc
+xdg_data_home=`${BASH:-bash} -c 'echo "${XDG_DATA_HOME:-$HOME/.local/share}"'`
+mkdir -p "$xdg_data_home"
+ln -s "`pwd`/xdg/defaults.list" "${xdg_data_home}/applications"
