@@ -32,6 +32,8 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+export LESS='-iR'
+
 # custom installed software
 for dir in ~/software/*
 do
