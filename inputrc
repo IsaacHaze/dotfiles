@@ -38,3 +38,15 @@ set show-all-if-unmodified off
 set show-mode-in-prompt off
 set skip-completed-text off
 set visible-stats off
+
+# see man readline(3) for more info...
+# ctrl-right-arrow
+"\e[1;5C": forward-word
+# "\e\e[C": forward-word
+# ctrl-left-arrow
+"\e[1;5D": backward-word
+# "\e\e[D": backward-word
+
+# Be sure to set "Backspace key generates: CTRL-H" in xfce-terminal
+# preferences
+"\C-h":backward-kill-word
