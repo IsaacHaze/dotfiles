@@ -1,4 +1,3 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
@@ -35,18 +34,37 @@ shopt -s checkwinsize
 export LESS='-iR'
 
 # custom installed software
-for dir in ~/software/*
-do
-  if [ -d "$dir/bin" ]
-  then
-      PATH="$dir/bin":$PATH
-  fi
-done
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # use gnu utils (with their common names, not "g" prefixed)
+    for gnu_pkg in findutils coreutils
+    do
+        PATH="/usr/local/opt/${gnu_pkg}/libexec/gnubin:$PATH"
+        MANPATH="/usr/local/opt/${gnu_pkg}/libexec/gnuman:$MANPATH"
+    done
+    # brew's openssh
+    PATH=/usr/local/Cellar/openssh/7.5p1_1/bin:$PATH
+    MANPATH=/usr/local/Cellar/openssh/7.5p1_1/share/man:$MANPATH
+    # brew's rsync
+    PATH=/usr/local/Cellar/rsync/3.1.2/bin:$PATH
+    MANPATH=/usr/local/Cellar/rsync/3.1.2/share/man:$MANPATH
+    # brew's unzip
+    PATH=/usr/local/opt/unzip/bin:$PATH
 
-# python/pip
-PATH=~/.local/bin:$PATH
+    # sublime subl
+    PATH=/Applications/Sublime\ Text.app/Contents/SharedSupport/bin:$PATH
+else
+    for dir in ~/software/*
+    do
+        if [ -d "$dir/bin" ]; then
+            PATH="$dir/bin":$PATH
 
-PATH=~/bin:$PATH
+            # python/pip
+            PATH=~/.local/bin:$PATH
+
+            PATH=~/bin:$PATH
+        fi
+    done
+fi
 
 export PATH
 
@@ -59,6 +77,7 @@ fi
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color) color_prompt=yes;;
+    xterm-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -86,7 +105,7 @@ unset color_prompt force_color_prompt
 
 #not too fancy a prompt, ANSI escape start '\e[', escape end 'm',
 #bold = '1', normal = '0'
-export PS1='\[\e[1m\]\u\[\e[0m\]@\[\e[1m\]\h\[\e[0m\] '
+export PS1='\[\033[1m\]\u\[\033[0m\]@\[\033[1m\]\h\[\033[0m\] '
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -98,6 +117,7 @@ xterm*|rxvt*)
 esac
 
 
+# git prompt & completions
 function parse_git_branch {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo "["${ref#refs/heads/}"] "
@@ -105,6 +125,12 @@ function parse_git_branch {
 
 PS1="$PS1\$(parse_git_branch)"
 
+source ~/dotfiles/git-completion.bash
+
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export CLICOLOR=1
+fi
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -142,3 +168,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+export LC_ALL=en_US.UTF-8

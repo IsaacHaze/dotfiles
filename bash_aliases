@@ -1,4 +1,5 @@
 # bash aliases
+alias ls='ls --color=auto'
 alias ll='ls -l'
 
 # common typos
@@ -11,3 +12,5 @@ alias dir='echo "sorry, wrong OS"'
 
 alias calc='libreoffice --calc'
 alias writer='libreoffice --writer'
+
+alias week='date +%Y-W%W'
